@@ -260,10 +260,11 @@ class Test_Connection < Test::Unit::TestCase
     }
   end
 
+  #TODO it does not pass
   def test_column
     db = logon_string.user
-    using_table('t', "x INTEGER, y INTEGER") {|name|
-      col = @conn.column(Teradata::Table.new(db, 't'), 'x')
+    using_table("#{playpen_string}_t", "x INTEGER, y INTEGER") {|name|
+      col = @conn.column(Teradata::Table.new(db, "#{playpen_string}_t"), 'x')
       assert_instance_of Teradata::Column, col
       assert_equal 'x', col.column_name.strip.downcase
     }
@@ -271,7 +272,7 @@ class Test_Connection < Test::Unit::TestCase
 
   def test_transaction
     connect {|conn|
-      using_test_table('t') {|table|
+      using_test_table("#{playpen_string}_t") {|table|
         n_records = count(table, conn)
 
         # transaction fails #1

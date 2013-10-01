@@ -6,7 +6,8 @@ module RubyCLITestUtils
   end
 
   def playpen_string
-    ENV['TEST_PLAYPEN_STRING'] or raise ArgumentError, "environ TEST_PLAYPEN_STRING not given"
+    s = ENV['TEST_PLAYPEN_STRING'] or raise ArgumentError, "environ TEST_PLAYPEN_STRING not given"
+    s.downcase
   end
 
   def connect(*args)
