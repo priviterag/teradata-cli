@@ -8,11 +8,3 @@ Rake::ExtensionTask.new do |ext|
   ext.tmp_dir = 'tmp'                     # temporary folder used during compilation.
   ext.source_pattern = "*.{c,cpp}"        # monitor file changes to allow simple rebuild.
 end
-
-desc 'Run unit tests'
-task :test do
-  sh "ruby -I\"lib:test\" test/test_connection.rb"
-  sh "ruby -I'lib:test' test/test_dbobject.rb"
-  sh "ruby -I'lib:test' test/test_record.rb"
-end
-task :default => :test
