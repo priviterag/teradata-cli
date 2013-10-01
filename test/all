@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+basedir = File.dirname($0)
+$LOAD_PATH.unshift basedir
+Dir.glob("#{basedir}/test_*.rb") do |test_case|
+  load test_case
+end

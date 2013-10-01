@@ -10,8 +10,13 @@ module RubyCLITestUtils
     s.downcase
   end
 
+  def env_string
+    s = ENV['TEST_ENV_STRING'] or raise ArgumentError, "environ TEST_ENV_STRING not given"
+    s.downcase
+  end
+
   def get_table_name(name)
-    "#{playpen_string}_#{name}"
+    "#{playpen_string}.#{env_string}_#{name}"
   end
 
   def connect(*args)
@@ -31,7 +36,7 @@ module RubyCLITestUtils
     }
   end
 
-  def using_test_table(name = "#{playpen_string}_t", conn = @conn, &block)
+  def using_test_table(name = "#{get_table_name('t')}", conn = @conn, &block)
     unless conn
       connect {|_conn| using_test_table(name, _conn, &block) }
       return
