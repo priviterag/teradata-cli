@@ -1,9 +1,12 @@
 module RubyCLITestUtils
 
   def logon_string
-    s = ENV['TEST_LOGON_STRING'] or
-        raise ArgumentError, "environ TEST_LOGON_STRING not given"
+    s = ENV['TEST_LOGON_STRING'] or raise ArgumentError, "environ TEST_LOGON_STRING not given"
     Teradata::LogonString.parse(s)
+  end
+
+  def playpen_string
+    ENV['TEST_PLAYPEN_STRING'] or raise ArgumentError, "environ TEST_PLAYPEN_STRING not given"
   end
 
   def connect(*args)
