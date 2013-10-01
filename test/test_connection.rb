@@ -21,10 +21,7 @@ class Test_Connection < Test::Unit::TestCase
       assert_equal true, conn.closed?
     end
 
-    Teradata::Connection.open(logon_string) {|conn|
-      assert_instance_of Teradata::Connection, conn
-      assert_equal false, conn.closed?
-    }
+    Teradata::Connection.open(logon_string) {|c| assert_instance_of(Teradata::Connection, c); assert_equal(false, c.closed?)}
     assert_equal true, conn.closed?
   end
 
@@ -113,7 +110,7 @@ class Test_Connection < Test::Unit::TestCase
     buf = []
     num_rs = 0
     conn.execute_query(
-        "SELECT * FROM #{name} ORDER BY 1;
+      "SELECT * FROM #{name} ORDER BY 1;
          SELECT * FROM #{name} ORDER BY 1 DESC;") {|sets|
       assert_instance_of Teradata::ResultSet, sets
       sets.each_result_set do |rs|
@@ -183,40 +180,42 @@ class Test_Connection < Test::Unit::TestCase
   def test_duplicated_connections
     assert_nothing_thrown {
       connect {|c1|
-        connect {|c2|
-          drop_table_force "#{playpen_string}_t", c1
-          c2.execute_update "CREATE TABLE #{playpen_string}_t (x INTEGER);"
-          drop_table_force "#{playpen_string}_t", c1
-          c2.execute_update "CREATE TABLE #{playpen_string}_t (x INTEGER);"
-          drop_table_force "#{playpen_string}_t", c1
-        }
+      connect {|c2|
+        drop_table_force "#{playpen_string}_t", c1
+        c2.execute_update "CREATE TABLE #{playpen_string}_t (x INTEGER);"
+        drop_table_force "#{playpen_string}_t", c1
+        c2.execute_update "CREATE TABLE #{playpen_string}_t (x INTEGER);"
+        drop_table_force "#{playpen_string}_t", c1
       }
+    }
     }
   end
 
+  #TODO it does not pass
   def test_tables
     db = logon_string.user
     connect {|conn|
       assert_equal [], @conn.tables(db)
-      using_test_table('t1') {
-        using_test_table('t2') {
-          list = @conn.tables(db).sort_by {|t| t.name }
-          assert_equal [
-            Teradata::Table.new(db, 't1'),
-            Teradata::Table.new(db, 't2')
-          ], list
-          assert_equal 'size', list[0].size > 0 ? 'size' : 'empty'
-          assert_equal 'size', list[1].size > 0 ? 'size' : 'empty'
-        }
+      using_test_table("#{playpen_string}_t1") {
+        using_test_table("#{playpen_string}_t2") {
+        list = @conn.tables(db).sort_by {|t| t.name }
+        assert_equal [
+          Teradata::Table.new(db, "#{playpen_string}_t1"),
+          Teradata::Table.new(db, "#{playpen_string}_t2")
+        ], list
+        assert_equal 'size', list[0].size > 0 ? 'size' : 'empty'
+        assert_equal 'size', list[1].size > 0 ? 'size' : 'empty'
+      }
       }
     }
   end
 
+  #TODO it does not pass
   def test_views
     db = logon_string.user
     using_test_table {
       assert_equal [], @conn.views(db)
-      using_view('v', 'select 1 as i') {|name|
+      using_view("#{playpen_string}_v", 'select 1 as i') {|name|
         assert_equal [Teradata::View.new(db, name)], @conn.views(db)
       }
     }
@@ -228,7 +227,7 @@ class Test_Connection < Test::Unit::TestCase
       assert_equal [], @conn.objects(db)
       using_test_table {|table|
         assert_equal [Teradata::Table.new(db, table)], @conn.objects(db)
-        using_view('v', 'select 1 as i') {|view|
+        using_view("#{playpen_string}_v", 'select 1 as i') {|view|
           assert_equal [
             Teradata::Table.new(db, table),
             Teradata::View.new(db, view)
@@ -278,18 +277,18 @@ class Test_Connection < Test::Unit::TestCase
         # transaction fails #1
         assert_raise(RuntimeError) {
           conn.transaction {
-            conn.query "DELETE FROM #{table}"
-            raise RuntimeError, "USER ABORT"
-          }
+          conn.query "DELETE FROM #{table}"
+          raise RuntimeError, "USER ABORT"
+        }
         }
         assert_equal n_records, count(table, conn)
 
         # transaction fails #2
         assert_raise(Teradata::UserAbort) {
           conn.transaction {
-            conn.query "DELETE FROM #{table}"
-            conn.abort
-          }
+          conn.query "DELETE FROM #{table}"
+          conn.abort
+        }
         }
         assert_equal n_records, count(table, conn)
 
