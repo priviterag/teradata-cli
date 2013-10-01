@@ -137,7 +137,7 @@ class Test_Record < Test::Unit::TestCase
   end
 
   def test_datetimes
-    using_table('times', 'd DATE, t TIME(1), ts TIMESTAMP(1)') {|name|
+    using_table(get_table_name('times'), 'd DATE, t TIME(1), ts TIMESTAMP(1)') {|name|
       insert name, "DATE '2009-01-23', TIME '12:34:56.0', TIMESTAMP '2009-01-23 12:34:56.0'"
       rec = select(name).first
       assert_equal 3, rec.size
