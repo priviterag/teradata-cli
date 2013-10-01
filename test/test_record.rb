@@ -100,7 +100,7 @@ class Test_Record < Test::Unit::TestCase
     # with external and internal encoding
     def test_enc_conversion
       connect('UTF8', Encoding::EUC_JP) {
-        using_table('strs', 'c CHAR(1) CHARACTER SET UNICODE, vc VARCHAR(1) CHARACTER SET UNICODE') {|name|
+        using_table(get_table_name('strs'), 'c CHAR(1) CHARACTER SET UNICODE, vc VARCHAR(1) CHARACTER SET UNICODE') {|name|
           insert name, euc("'\xA4\xA2', '\xA4\xA2'")
           rec = select(name).first
           assert_equal 2, rec.size
