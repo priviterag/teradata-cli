@@ -38,7 +38,7 @@ class Test_Connection < Test::Unit::TestCase
   end
 
   def test_txn
-    using_table('t', "x INTEGER, y INTEGER") {|name|
+    using_table("#{playpen_string}_t", "x INTEGER, y INTEGER") {|name|
       @conn.execute_update "BEGIN TRANSACTION;"
       @conn.execute_update "INSERT INTO #{name} (x,y) VALUES (1,2);"
       @conn.execute_update "INSERT INTO #{name} (x,y) VALUES (3,4);"
