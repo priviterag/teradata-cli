@@ -184,11 +184,11 @@ class Test_Connection < Test::Unit::TestCase
     assert_nothing_thrown {
       connect {|c1|
         connect {|c2|
-          drop_table_force 't', c1
-          c2.execute_update "CREATE TABLE t (x INTEGER);"
-          drop_table_force 't', c1
-          c2.execute_update "CREATE TABLE t (x INTEGER);"
-          drop_table_force 't', c1
+          drop_table_force "#{playpen_string}_t", c1
+          c2.execute_update "CREATE TABLE #{playpen_string}_t (x INTEGER);"
+          drop_table_force "#{playpen_string}_t", c1
+          c2.execute_update "CREATE TABLE #{playpen_string}_t (x INTEGER);"
+          drop_table_force "#{playpen_string}_t", c1
         }
       }
     }
