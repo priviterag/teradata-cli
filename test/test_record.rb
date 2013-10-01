@@ -45,7 +45,7 @@ class Test_Record < Test::Unit::TestCase
 
   def test_session_charset_UTF8
     connect('UTF8') {
-      using_table('strs', 'c CHAR(1) CHARACTER SET UNICODE, vc VARCHAR(1) CHARACTER SET UNICODE') {|name|
+      using_table(get_table_name('strs'), 'c CHAR(1) CHARACTER SET UNICODE, vc VARCHAR(1) CHARACTER SET UNICODE') {|name|
         insert name, utf8("'\343\201\202', '\343\201\202'")
         rec = select(name).first
         assert_equal 2, rec.size
