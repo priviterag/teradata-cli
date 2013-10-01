@@ -139,7 +139,7 @@ class Test_Connection < Test::Unit::TestCase
 
   def test_execute_query_without_block
     using_test_table {|name|
-      rs = @conn.execute_query('SELECT * FROM t ORDER BY 1;')
+      rs = @conn.execute_query("SELECT * FROM #{playpen_string}_t ORDER BY 1;")
 
       recs = []
       rs.each do |rec|
