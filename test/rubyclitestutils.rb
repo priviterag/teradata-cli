@@ -26,7 +26,7 @@ module RubyCLITestUtils
     }
   end
 
-  def using_test_table(name = 't', conn = @conn, &block)
+  def using_test_table(name = "#{playpen_string}_t", conn = @conn, &block)
     unless conn
       connect {|_conn| using_test_table(name, _conn, &block) }
       return

@@ -30,8 +30,8 @@ class Test_Connection < Test::Unit::TestCase
 
   def test_execute_update
     connect {
-      drop_table_force 't'
-      x = @conn.execute_update("CREATE TABLE t (x INTEGER);")
+      drop_table_force "#{playpen_string}_t"
+      x = @conn.execute_update("CREATE TABLE #{playpen_string}_t (x INTEGER);")
       assert_instance_of Teradata::ResultSet, x
       assert_equal true, x.closed?
     }
