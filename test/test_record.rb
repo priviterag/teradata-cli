@@ -32,7 +32,7 @@ class Test_Record < Test::Unit::TestCase
   end
 
   def test_strings
-    using_table('strs', 'c CHAR(4), vc VARCHAR(4), b BYTE(4), vb VARBYTE(4)') {|name|
+    using_table(get_table_name('strs'), 'c CHAR(4), vc VARCHAR(4), b BYTE(4), vb VARBYTE(4)') {|name|
       insert name, "'ab', 'cd', '6566'XBF, '6768'XBV"
       rec = select(name).first
       assert_equal 4, rec.size
