@@ -10,6 +10,10 @@ module RubyCLITestUtils
     s.downcase
   end
 
+  def get_table_name(name)
+    "#{playpen_string}_#{name}"
+  end
+
   def connect(*args)
     options = {}
     unless args.empty?
