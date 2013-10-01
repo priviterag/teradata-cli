@@ -21,7 +21,7 @@ class Test_Record < Test::Unit::TestCase
   end
 
   def test_real_numbers
-    using_table('nums', 'f FLOAT, d1 DECIMAL(3,0), d2 DECIMAL(15,1)') {|name|
+    using_table(get_table_name('nums'), 'f FLOAT, d1 DECIMAL(3,0), d2 DECIMAL(15,1)') {|name|
       insert name, '1.6, 123, 12345678901234.5'
       rec = select(name).first
       assert_equal 3, rec.size
