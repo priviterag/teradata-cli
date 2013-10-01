@@ -148,7 +148,7 @@ class Test_Record < Test::Unit::TestCase
   end
 
   def test_values_at
-    using_table('t', 'x INTEGER, y INTEGER, z INTEGER') {|name|
+    using_table(get_table_name('t'), 'x INTEGER, y INTEGER, z INTEGER') {|name|
       insert name, '1,2,3'
       rec = select(name).first
       assert_equal 3, rec.size
