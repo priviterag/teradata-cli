@@ -221,6 +221,7 @@ class Test_Connection < Test::Unit::TestCase
     }
   end
 
+  #TODO it does not pass
   def test_objects
     db = logon_string.user
     connect {
