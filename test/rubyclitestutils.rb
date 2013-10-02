@@ -6,17 +6,17 @@ module RubyCLITestUtils
   end
 
   def playpen_string
-    s = ENV['TEST_PLAYPEN_STRING'] or raise ArgumentError, "environ TEST_PLAYPEN_STRING not given"
-    s.downcase
+    s = ENV['TEST_PLAYPEN_STRING']
+    s == '' ? nil : "#{s}"
   end
 
   def env_string
-    s = ENV['TEST_ENV_STRING'] or raise ArgumentError, "environ TEST_ENV_STRING not given"
-    s.downcase
+    s = ENV['TEST_ENV_STRING']
+    s == '' ? nil : "#{s}"
   end
 
   def get_table_name(name)
-    "#{playpen_string}.#{env_string}_#{name}"
+    "#{playpen_string ? playpen_string + '.' : ''}#{env_string ? env_string + '_' : ''}#{name}"
   end
 
   def connect(*args)

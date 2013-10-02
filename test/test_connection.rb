@@ -191,50 +191,41 @@ class Test_Connection < Test::Unit::TestCase
     }
   end
 
-  # TODO it does not pass
-  #def test_tables
-  #  db = playpen_string
-  #  connect {|conn|
-  #    assert_equal [], @conn.tables(db)
-  #    using_test_table(get_table_name('t1')) {
-  #      using_test_table(get_table_name('t2')) {
-  #      list = @conn.tables(db)
-  #      assert(list.includes? Teradata::Table.new(db, get_table_name('t1')))
-  #      assert(list.includes? Teradata::Table.new(db, get_table_name('t2')))
-  #      #assert_equal 'size', list[0].size > 0 ? 'size' : 'empty'
-  #      #assert_equal 'size', list[1].size > 0 ? 'size' : 'empty'
-  #    }
-  #    }
-  #  }
-  #end
+  def test_tables
+    db = playpen_string
+    connect {|conn|
+      # assert_equal [], @conn.tables(db)
+      using_test_table(get_table_name('t1')) {
+        using_test_table(get_table_name('t2')) {
+        list = @conn.tables(db)
+        assert(list.include? Teradata::Table.new(db, 't1'))
+        assert(list.include? Teradata::Table.new(db, 't2'))
+      }}
+    }
+  end
 
-  #TODO it does not pass
-  #def test_views
-  #  db = playpen_string
-  #  using_test_table {
-  #    assert_equal [], @conn.views(db)
-  #    using_view("#{get_table_name('v')}", 'select 1 as i') {|name|
-  #      assert_equal [Teradata::View.new(db, name)], @conn.views(db)
-  #    }
-  #  }
-  #end
+  def test_views
+    db = playpen_string
+    using_test_table do
+      using_view("#{get_table_name('v')}", 'select 1 as i') do
+        assert(@conn.views(db).include? Teradata::View.new(db, 'v'))
+      end
+    end
+  end
 
-  #TODO it does not pass
-  #def test_objects
-  #  db = playpen_string
-  #  connect {
-  #    assert_equal [], @conn.objects(db)
-  #    using_test_table {|table|
-  #      assert_equal [Teradata::Table.new(db, table)], @conn.objects(db)
-  #      using_view("#{get_table_name('v')}", 'select 1 as i') {|view|
-  #        assert_equal [
-  #          Teradata::Table.new(db, table),
-  #          Teradata::View.new(db, view)
-  #        ], @conn.objects(db).sort_by {|obj| [obj.type_char, obj.name] }
-  #      }
-  #    }
-  #  }
-  #end
+  def test_objects
+    db = playpen_string
+    connect do
+      # assert_equal [], @conn.objects(db)
+      using_test_table(get_table_name('t')) do
+        using_view("#{get_table_name('v')}", 'select 1 as i') do
+          objects = @conn.objects(db)
+          assert(objects.include? Teradata::Table.new(db, 't'))
+          assert(objects.include? Teradata::View.new(db, 'v'))
+        end
+      end
+    end
+  end
 
   def using_view(name, query, conn = @conn)
     drop_view_force name, conn
@@ -259,15 +250,14 @@ class Test_Connection < Test::Unit::TestCase
     }
   end
 
-  #TODO it does not pass
-  #def test_column
-  #  db = playpen_string
-  #  using_table("#{get_table_name('t')}", "x INTEGER, y INTEGER") {|name|
-  #    col = @conn.column(Teradata::Table.new("#{get_table_name('t')}"), 'x')
-  #    assert_instance_of Teradata::Column, col
-  #    assert_equal 'x', col.column_name.strip.downcase
-  #  }
-  #end
+  def test_column
+    db = playpen_string
+    using_table("#{get_table_name('t')}", "x INTEGER, y INTEGER") do
+      col = @conn.column(Teradata::Table.new(db, 't'), 'x')
+      assert_instance_of Teradata::Column, col
+      assert_equal 'x', col.column_name.strip.downcase
+    end
+  end
 
   def test_transaction
     connect {|conn|
