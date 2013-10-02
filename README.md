@@ -22,7 +22,7 @@ TODO: Write usage instructions here
 
 ## Tests
 
-    $ ruby -I"lib:test" test/all
+    $ ruby -Ilib:test test/all
 
 ## Contributing
 
