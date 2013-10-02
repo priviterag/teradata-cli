@@ -1,0 +1,56 @@
+.include header
+    <title>database <%= string database.name %></title>
+</head>
+<body>
+
+<div id="header">
+<h1>database <%= string database.name %></h1>
+</div>
+
+<ol class="topicpath">
+<% database.parents.reverse_each do |parent| %>
+<li><a href="<%= database_url(parent.name) %>"><%= string parent.name %></a></li>
+<% end %>
+<li><%= string database.name %></li>
+</ol>
+
+<h2>ディスク容量</h2>
+<table id="perms">
+    <tr><th>Own Current Perm</th><td><%= int database.current_perm %></td></tr>
+    <tr><th>Own Max Perm</th>    <td><%= int database.max_perm %></td></tr>
+    <tr><th>Own Peak Perm</th>   <td><%= int database.peak_perm %></td></tr>
+    <tr><th>Total Current Perm</th><td><%= int database.total_current_perm %></td></tr>
+    <tr><th>Total Max Perm</th>  <td><%= int database.total_max_perm %></td></tr>
+    <tr><th>Total Peak Perm</th> <td><%= int database.total_peak_perm %></td></tr>
+</table>
+
+<h2>子データベース</h2>
+
+<ul>
+<% database.children.sort_by {|c| c.name.downcase }.each do |child| %>
+<li><a href="<%= database_url(child.name) %>"><%= string child.name %></a></li>
+<% end %>
+</ul>
+
+<h2>テーブル</h2>
+
+<table id="tables">
+    <thead>
+        <tr>
+        <th>テーブル名</th>
+        <th>Current Perm</th>
+        <th>Peak Perm</th>
+        </tr>
+    </thead>
+    <tbody>
+    <% database.tables.sort_by {|t| t.unqualified_name }.each do |table| %>
+        <tr>
+        <td><%= string table.unqualified_name %></td>
+        <td><%= int table.current_perm %></td>
+        <td><%= int table.peak_perm %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+.include footer
