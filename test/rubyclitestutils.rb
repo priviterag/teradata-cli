@@ -41,12 +41,12 @@ module RubyCLITestUtils
       connect {|_conn| using_test_table(name, _conn, &block) }
       return
     end
-    using_table(name, 'x INTEGER, y INTEGER', conn) {|name|
+    using_table(name, 'x INTEGER, y INTEGER', conn) do |n|
       %w(1,2 3,4 5,6).each do |values|
-        insert name, values, conn
+        insert n, values, conn
       end
-      yield name
-    }
+      yield n
+    end
   end
 
   def using_table(name, fields, conn = @conn, &block)
