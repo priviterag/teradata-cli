@@ -2,7 +2,7 @@ module RubyCLITestUtils
 
   def logon_string
     s = ENV['TEST_LOGON_STRING'] or raise ArgumentError, "environ TEST_LOGON_STRING not given"
-    Teradata::LogonString.parse(s)
+    TeradataCli::LogonString.parse(s)
   end
 
   def playpen_string
@@ -26,7 +26,7 @@ module RubyCLITestUtils
       options[:session_charset] = charset if charset
       options[:internal_encoding] = internal if internal
     end
-    Teradata::Connection.open(logon_string, options) {|conn|
+    TeradataCli::Connection.open(logon_string, options) {|conn|
       begin
         @conn = conn
         yield conn
@@ -72,7 +72,7 @@ module RubyCLITestUtils
 
   def drop_table_force(name, conn = @conn)
     drop_table name, conn
-  rescue Teradata::SQLError => err
+  rescue TeradataCli::SQLError => err
     raise err unless err.code == ERR_OBJECT_NOT_EXIST
   end
 

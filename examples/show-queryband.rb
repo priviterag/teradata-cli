@@ -7,7 +7,7 @@
 #    $ ruby example/show-queryband.rb
 #
 
-require 'teradata'
+require 'teradata-cli'
 
 logon_string = ENV['LOGON_STRING']
 unless logon_string
@@ -15,7 +15,7 @@ unless logon_string
   exit 1
 end
 
-Teradata.connect(logon_string) {|conn|
+TeradataCli.connect(logon_string) {|conn|
   conn.query("SELECT * FROM dbc.sessionInfo") {|rs|
     rs.each do |rec|
       user = rec[:UserName].strip

@@ -8,13 +8,13 @@
 # the GNU LGPL2, Lesser General Public License version 2.
 #
 
-require 'teradata/cli'
-require 'teradata/utils'
-require 'teradata/exception'
+require 'teradata-cli/cli'
+require 'teradata-cli/utils'
+require 'teradata-cli/exception'
 require 'forwardable'
 require 'stringio'
 
-module Teradata
+module TeradataCli
 
   class ConnectionError < CLIError; end
   class MetaDataFormatError < CLIError; end
@@ -32,7 +32,7 @@ module Teradata
 
   class UserAbort < SQLError; end
 
-  def Teradata.connect(*args, &block)
+  def TeradataCli.connect(*args, &block)
     Connection.open(*args, &block)
   end
 
@@ -43,15 +43,15 @@ module Teradata
     end
 
     def Connection.default_session_charset
-      Teradata::SessionCharset.new('UTF8')
+      TeradataCli::SessionCharset.new('UTF8')
     end
 
     def initialize(logon_string, options = {})
       session_charset = options[:session_charset] || Connection.default_session_charset
       internal_encoding = options[:internal_encoding] || default_internal_encoding()
       @logger = options[:logger] || NullLogger.new
-      @logon_string = Teradata::LogonString.intern(logon_string)
-      @session_charset = Teradata::SessionCharset.intern(session_charset)
+      @logon_string = TeradataCli::LogonString.intern(logon_string)
+      @session_charset = TeradataCli::SessionCharset.intern(session_charset)
       @external_encoding = @session_charset.encoding
       @internal_encoding = internal_encoding
       ex = StringExtractor.get(@external_encoding, @internal_encoding)
@@ -265,7 +265,7 @@ module Teradata
     end
 
     def id_string
-      "Teradata::Connection:#{'%x' % object_id}"
+      "TeradataCli::Connection:#{'%x' % object_id}"
     end
   end
 
@@ -400,11 +400,11 @@ module Teradata
     private
 
     def warn(&block)
-      @logger.warn { "Teradata::CLI:#{'%x' % object_id}: #{yield}" }
+      @logger.warn { "TeradataCli::CLI:#{'%x' % object_id}: #{yield}" }
     end
 
     def debug(&block)
-      @logger.debug { "Teradata::CLI:#{'%x' % object_id}: #{yield}" }
+      @logger.debug { "TeradataCli::CLI:#{'%x' % object_id}: #{yield}" }
     end
 
   end

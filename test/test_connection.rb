@@ -1,4 +1,4 @@
-require 'teradata'
+require 'teradata-cli'
 require 'test/unit'
 libdir = File.dirname(__FILE__)
 $LOAD_PATH.unshift libdir unless $LOAD_PATH.include?(libdir)
@@ -10,8 +10,8 @@ class Test_Connection < Test::Unit::TestCase
 
   def test_s_open
     begin
-      conn = Teradata::Connection.open(logon_string)
-      assert_instance_of Teradata::Connection, conn
+      conn = TeradataCli::Connection.open(logon_string)
+      assert_instance_of TeradataCli::Connection, conn
       assert_equal false, conn.closed?
     ensure
       begin
@@ -21,7 +21,7 @@ class Test_Connection < Test::Unit::TestCase
       assert_equal true, conn.closed?
     end
 
-    Teradata::Connection.open(logon_string) {|c| assert_instance_of(Teradata::Connection, c); assert_equal(false, c.closed?)}
+    TeradataCli::Connection.open(logon_string) {|c| assert_instance_of(TeradataCli::Connection, c); assert_equal(false, c.closed?)}
     assert_equal true, conn.closed?
   end
 
@@ -29,7 +29,7 @@ class Test_Connection < Test::Unit::TestCase
     connect {
       drop_table_force "#{get_table_name('t')}"
       x = @conn.execute_update("CREATE TABLE #{get_table_name('t')} (x INTEGER);")
-      assert_instance_of Teradata::ResultSet, x
+      assert_instance_of TeradataCli::ResultSet, x
       assert_equal true, x.closed?
     }
   end
@@ -47,7 +47,7 @@ class Test_Connection < Test::Unit::TestCase
         @conn.execute_update "BEGIN TRANSACTION;"
         @conn.execute_update "DELETE FROM #{name};"
         @conn.execute_update "ABORT;"
-      rescue Teradata::UserAbort
+      rescue TeradataCli::UserAbort
       end
       recs = @conn.entries("SELECT * FROM #{name} ORDER BY 1;")
       assert_equal 2, recs.size
@@ -66,19 +66,19 @@ class Test_Connection < Test::Unit::TestCase
   def _test_single_rs(name, conn)
     buf = []
     conn.execute_query("SELECT * FROM #{name} ORDER BY 1") {|rs|
-      assert_instance_of Teradata::ResultSet, rs
+      assert_instance_of TeradataCli::ResultSet, rs
       rs.each do |rec|
         buf.push rec
       end
     }
     assert_equal 3, buf.size
-    assert_instance_of Teradata::Record, buf[0]
+    assert_instance_of TeradataCli::Record, buf[0]
     assert_equal 1, buf[0][:x]
     assert_equal 2, buf[0][:y]
-    assert_instance_of Teradata::Record, buf[1]
+    assert_instance_of TeradataCli::Record, buf[1]
     assert_equal 3, buf[1][:x]
     assert_equal 4, buf[1][:y]
-    assert_instance_of Teradata::Record, buf[2]
+    assert_instance_of TeradataCli::Record, buf[2]
     assert_equal 5, buf[2][:x]
     assert_equal 6, buf[2][:y]
   end
@@ -87,10 +87,10 @@ class Test_Connection < Test::Unit::TestCase
     buf = []
     num_rs = 0
     conn.execute_query("SELECT * FROM #{name} ORDER BY 1") {|sets|
-      assert_instance_of Teradata::ResultSet, sets
+      assert_instance_of TeradataCli::ResultSet, sets
       sets.each_result_set do |rs|
         num_rs += 1
-        assert_instance_of Teradata::ResultSet, rs
+        assert_instance_of TeradataCli::ResultSet, rs
         rs.each do |rec|
           buf.push rec
         end
@@ -99,7 +99,7 @@ class Test_Connection < Test::Unit::TestCase
     assert_equal 1, num_rs
     assert_equal 3, buf.size
     buf.each do |r|
-      assert_instance_of Teradata::Record, r
+      assert_instance_of TeradataCli::Record, r
     end
     assert_equal [1,2], [buf[0][:x], buf[0][:y]]
     assert_equal [3,4], [buf[1][:x], buf[1][:y]]
@@ -112,10 +112,10 @@ class Test_Connection < Test::Unit::TestCase
     conn.execute_query(
       "SELECT * FROM #{name} ORDER BY 1;
          SELECT * FROM #{name} ORDER BY 1 DESC;") {|sets|
-      assert_instance_of Teradata::ResultSet, sets
+      assert_instance_of TeradataCli::ResultSet, sets
       sets.each_result_set do |rs|
         num_rs += 1
-        assert_instance_of Teradata::ResultSet, rs
+        assert_instance_of TeradataCli::ResultSet, rs
         rs.each do |rec|
           buf.push rec
         end
@@ -124,7 +124,7 @@ class Test_Connection < Test::Unit::TestCase
     assert_equal 2, num_rs
     assert_equal 6, buf.size
     buf.each do |r|
-      assert_instance_of Teradata::Record, r
+      assert_instance_of TeradataCli::Record, r
     end
     assert_equal [1,2], [buf[0][:x], buf[0][:y]]
     assert_equal [3,4], [buf[1][:x], buf[1][:y]]
@@ -198,8 +198,8 @@ class Test_Connection < Test::Unit::TestCase
       using_test_table(get_table_name('t1')) {
         using_test_table(get_table_name('t2')) {
         list = @conn.tables(db)
-        assert(list.include? Teradata::Table.new(db, 't1'))
-        assert(list.include? Teradata::Table.new(db, 't2'))
+        assert(list.include? TeradataCli::Table.new(db, 't1'))
+        assert(list.include? TeradataCli::Table.new(db, 't2'))
       }}
     }
   end
@@ -208,7 +208,7 @@ class Test_Connection < Test::Unit::TestCase
     db = playpen_string
     using_test_table do
       using_view("#{get_table_name('v')}", 'select 1 as i') do
-        assert(@conn.views(db).include? Teradata::View.new(db, 'v'))
+        assert(@conn.views(db).include? TeradataCli::View.new(db, 'v'))
       end
     end
   end
@@ -220,8 +220,8 @@ class Test_Connection < Test::Unit::TestCase
       using_test_table(get_table_name('t')) do
         using_view("#{get_table_name('v')}", 'select 1 as i') do
           objects = @conn.objects(db)
-          assert(objects.include? Teradata::Table.new(db, 't'))
-          assert(objects.include? Teradata::View.new(db, 'v'))
+          assert(objects.include? TeradataCli::Table.new(db, 't'))
+          assert(objects.include? TeradataCli::View.new(db, 'v'))
         end
       end
     end
@@ -239,13 +239,13 @@ class Test_Connection < Test::Unit::TestCase
 
   def drop_view_force(name, conn = @conn)
     conn.execute_update "DROP VIEW #{name}"
-  rescue Teradata::SQLError
+  rescue TeradataCli::SQLError
   end
 
   def test_info
     connect {
       info = @conn.info
-      assert_instance_of Teradata::SessionInfo, info
+      assert_instance_of TeradataCli::SessionInfo, info
       assert_equal logon_string.user.downcase, info.user_name.downcase
     }
   end
@@ -253,8 +253,8 @@ class Test_Connection < Test::Unit::TestCase
   def test_column
     db = playpen_string
     using_table("#{get_table_name('t')}", "x INTEGER, y INTEGER") do
-      col = @conn.column(Teradata::Table.new(db, 't'), 'x')
-      assert_instance_of Teradata::Column, col
+      col = @conn.column(TeradataCli::Table.new(db, 't'), 'x')
+      assert_instance_of TeradataCli::Column, col
       assert_equal 'x', col.column_name.strip.downcase
     end
   end
@@ -274,7 +274,7 @@ class Test_Connection < Test::Unit::TestCase
         assert_equal n_records, count(table, conn)
 
         # transaction fails #2
-        assert_raise(Teradata::UserAbort) {
+        assert_raise(TeradataCli::UserAbort) {
           conn.transaction {
           conn.query "DELETE FROM #{table}"
           conn.abort

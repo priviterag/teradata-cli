@@ -1,4 +1,4 @@
-require 'teradata'
+require 'teradata-cli'
 require 'test/unit'
 libdir = File.dirname(__FILE__)
 $LOAD_PATH.unshift libdir unless $LOAD_PATH.include?(libdir)
@@ -55,7 +55,7 @@ class Test_Record < Test::Unit::TestCase
     }
   end
 
-  # TODO Teradata::CLIError: CLI error: [EM_227] MTDP: EM_CHARNAME(227): invalid character set name specified.
+  # TODO TeradataCli::CLIError: CLI error: [EM_227] MTDP: EM_CHARNAME(227): invalid character set name specified.
   #def test_session_charset_EUC
   #  connect('KANJIEUC_0U') {
   #    using_table(get_table_name('strs'), 'c CHAR(1) CHARACTER SET UNICODE, vc VARCHAR(1) CHARACTER SET UNICODE') {|name|
@@ -68,7 +68,7 @@ class Test_Record < Test::Unit::TestCase
   #  }
   #end
 
-  # TODO Teradata::CLIError: CLI error: [EM_227] MTDP: EM_CHARNAME(227): invalid character set name specified.
+  # TODO TeradataCli::CLIError: CLI error: [EM_227] MTDP: EM_CHARNAME(227): invalid character set name specified.
   #def test_session_charset_SJIS
   #  connect('KANJISJIS_0S') {
   #    using_table(get_table_name('strs'), 'c CHAR(1) CHARACTER SET UNICODE, vc VARCHAR(1) CHARACTER SET UNICODE') {|name|
@@ -170,9 +170,9 @@ class Test_Record < Test::Unit::TestCase
         insert name, '1,2,NULL'
         rec = select(name).first
         assert_equal 3, rec.size
-        assert_instance_of Teradata::Field, rec.field(:x)
-        assert_instance_of Teradata::Field, rec.field(:y)
-        assert_instance_of Teradata::Field, rec.field(:z)
+        assert_instance_of TeradataCli::Field, rec.field(:x)
+        assert_instance_of TeradataCli::Field, rec.field(:y)
+        assert_instance_of TeradataCli::Field, rec.field(:z)
         assert_equal 1, rec.field(:x).value
         assert_equal 2, rec.field(:y).value
         assert_equal nil, rec.field(:z).value

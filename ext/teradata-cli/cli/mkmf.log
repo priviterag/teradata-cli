@@ -1,0 +1,57 @@
+have_library: checking for main() in -lcliv2... -------------------- yes
+
+"gcc -o conftest -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/i686-linux -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/ruby/backward -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  -fPIC conftest.c  -L. -L/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -Wl,-R/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     '-Wl,-rpath,/../lib' -Wl,-R -Wl,/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -L/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -lruby  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return 0;
+6: }
+/* end */
+
+"gcc -o conftest -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/i686-linux -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/ruby/backward -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  -fPIC conftest.c  -L. -L/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -Wl,-R/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     '-Wl,-rpath,/../lib' -Wl,-R -Wl,/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -L/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -lruby -lcliv2  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:5:57: error: ‘main’ undeclared (first use in this function)
+conftest.c:5:57: note: each undeclared identifier is reported only once for each function it appears in
+conftest.c:5:32: warning: variable ‘p’ set but not used [-Wunused-but-set-variable]
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int t(void) { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+ 6: int main(int argc, char **argv)
+ 7: {
+ 8:   if (argc > 1000000) {
+ 9:     printf("%p", &t);
+10:   }
+11: 
+12:   return 0;
+13: }
+/* end */
+
+"gcc -o conftest -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/i686-linux -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/ruby/backward -I/home/jc34/.rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  -fPIC conftest.c  -L. -L/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -Wl,-R/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     '-Wl,-rpath,/../lib' -Wl,-R -Wl,/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -L/home/jc34/.rvm/rubies/ruby-2.0.0-p247/lib -lruby -lcliv2  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:5:1: warning: implicit declaration of function ‘main’ [-Wimplicit-function-declaration]
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int t(void) { main(); return 0; }
+ 6: int main(int argc, char **argv)
+ 7: {
+ 8:   if (argc > 1000000) {
+ 9:     printf("%p", &t);
+10:   }
+11: 
+12:   return 0;
+13: }
+/* end */
+
+--------------------
+

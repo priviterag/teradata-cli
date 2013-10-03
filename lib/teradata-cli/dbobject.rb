@@ -8,11 +8,11 @@
 # the GNU LGPL2, Lesser General Public License version 2.
 #
 
-require 'teradata/utils'
-require 'teradata/connection'
-require 'teradata/exception'
+require 'teradata-cli/utils'
+require 'teradata-cli/connection'
+require 'teradata-cli/exception'
 
-module Teradata
+module TeradataCli
 
   class ObjectError < Error; end
 
@@ -161,7 +161,7 @@ module Teradata
         WHERE databaseName = #{sql_string database}
         GROUP BY tableName
       EndSQL
-      c = ::Teradata::Table
+      c = ::TeradataCli::Table
       recs.map {|rec|
         name, curr, peak = *rec.to_a
         c.new(database, name, curr.to_i, peak.to_i)
@@ -169,7 +169,7 @@ module Teradata
     end
 
     def views(database)
-      fetch_objects(database, ::Teradata::View)
+      fetch_objects(database, ::TeradataCli::View)
     end
 
     def fetch_objects(database, obj_class)
@@ -182,7 +182,7 @@ module Teradata
 
     def objects(database)
       entries("HELP DATABASE #{database}").map {|rec|
-        ::Teradata::DBObject.create(rec[1].strip, database, rec[0].strip)
+        ::TeradataCli::DBObject.create(rec[1].strip, database, rec[0].strip)
       }
     end
 

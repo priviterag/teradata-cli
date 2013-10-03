@@ -1,5 +1,5 @@
-require 'teradata'
-Teradata.connect(ENV['LOGON_STRING']) {|conn|
+require 'teradata-cli'
+TeradataCli.connect(ENV['LOGON_STRING']) {|conn|
   conn.tables("tudemo").
       sort_by {|table| -table.size }.
       first(5).

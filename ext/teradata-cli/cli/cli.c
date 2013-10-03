@@ -341,7 +341,7 @@ Init_cli(void)
 {
   VALUE Teradata, Teradata_Error;
 
-  Teradata = rb_define_module("Teradata");
+  Teradata = rb_define_module("TeradataCli");
   Teradata_Error = rb_const_get(Teradata, rb_intern("Error"));
 
   CLI = rb_define_class_under(Teradata, "CLI", rb_cObject);

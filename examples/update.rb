@@ -7,7 +7,7 @@
 #    $ ruby example/update.rb 'CREATE TABLE x (x INTEGER)'
 #
 
-require 'teradata'
+require 'teradata-cli'
 require 'logger'
 require 'pp'
 
@@ -26,6 +26,6 @@ end
 log = Logger.new($stderr)
 log.sev_threshold = $DEBUG ? Logger::DEBUG : Logger::INFO
 
-Teradata.connect(logon_string, :logger => log) {|conn|
+TeradataCli.connect(logon_string, :logger => log) {|conn|
   pp conn.update(sql)
 }

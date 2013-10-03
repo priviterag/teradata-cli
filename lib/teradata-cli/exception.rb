@@ -8,7 +8,7 @@
 # the GNU LGPL2, Lesser General Public License version 2.
 #
 
-module Teradata
+module TeradataCli
 
   class Error < StandardError; end
 

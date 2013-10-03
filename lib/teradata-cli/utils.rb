@@ -8,9 +8,9 @@
 # the GNU LGPL2, Lesser General Public License version 2.
 #
 
-require 'teradata/exception'
+require 'teradata-cli/exception'
 
-module Teradata
+module TeradataCli
 
   class BadLogonString < Error; end
 

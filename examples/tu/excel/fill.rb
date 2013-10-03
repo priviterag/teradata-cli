@@ -1,7 +1,7 @@
 require 'excel'
 require 'fileutils'
 require 'pp'
-require 'teradata'
+require 'teradata-cli'
 
 def main
   logon_string, template, output = ARGV
@@ -44,7 +44,7 @@ def fill_sheet(sheet, logon_string)
   y = value_cell.row + 1
 
   # Execute SQL and fill cells by data
-  Teradata.connect(logon_string) {|conn|
+  TeradataCli.connect(logon_string) {|conn|
     conn.query(sql) {|rs|
       rs.each do |rec|
         pp rec
