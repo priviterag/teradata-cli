@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["priviterag@gmail.com"]
   spec.description   = %q{ruby extension for Teradata Cliv2}
   spec.summary       = %q{ruby extension for Teradata Cliv2}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/priviterag/teradata-cli"
   spec.license       = "LGPL2"
 
   spec.files         = `git ls-files`.split($/)
