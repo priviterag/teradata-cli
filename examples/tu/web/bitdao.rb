@@ -56,14 +56,14 @@ class BitDAO
     exec_sql "BEGIN TRANSACTION;"
     begin
       yield
-    rescue Teradata::CLI::UserAbort => err
+    rescue TeradataCli::CLI::UserAbort => err
       aborting = true
       raise err
     ensure
       if $@
         begin
           abort unless aborting
-        rescue Teradata::CLI::UserAbort   # do not override original exception
+        rescue TeradataCli::CLI::UserAbort   # do not override original exception
         end
       else
         exec_sql "END TRANSACTION;"

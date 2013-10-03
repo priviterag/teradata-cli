@@ -1,8 +1,8 @@
 # $Id: bitdao.rb 184 2009-08-12 08:46:22Z aamine $
 
-require 'teradata'
+require 'teradata-cli'
 
-module Teradata
+module TeradataCli
   class Error
     include ::BitDAO::Error
   end

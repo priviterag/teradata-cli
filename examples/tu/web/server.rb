@@ -9,7 +9,7 @@ $KCODE = 'UTF-8' unless defined?(Encoding)
 $LOAD_PATH.push '.' unless $LOAD_PATH.include?('.')
 
 require 'tdwalker'
-require 'teradata'
+require 'teradata-cli'
 require 'bitweb'
 require 'bitdao'
 require 'bitdao/teradata'
@@ -85,7 +85,7 @@ def request_handler
     TDWalker::Models.new(
       TDWalker::DAO.new(
         log,
-        Teradata.connect(@logon_string)
+        TeradataCli.connect(@logon_string)
       )
     )
   )
