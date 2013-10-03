@@ -6,12 +6,12 @@ require 'teradata/cli/version'
 Gem::Specification.new do |spec|
   spec.name          = "teradata-cli"
   spec.version       = Teradata::Cli::VERSION
-  spec.authors       = ["jc34"]
-  spec.email         = ["jc34@uk.tesco.com"]
-  spec.description   = %q{Write a gem description}
-  spec.summary       = %q{Write a gem summary}
+  spec.authors       = ["Giuseppe Privitera"]
+  spec.email         = ["priviterag@gmail.com"]
+  spec.description   = %q{ruby extension for Teradata Cliv2}
+  spec.summary       = %q{ruby extension for Teradata Cliv2}
   spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.license       = "LGPL2"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }

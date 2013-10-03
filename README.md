@@ -1,6 +1,16 @@
 # Teradata::Cli
 
-TODO: Write a gem description
+Teradata::Cli is an access module which allows Ruby scripts
+to access Teradata RDBMS by CLIv2 interface.
+
+It's based on the [Ruby/CLIv2](http://sourceforge.net/projects/rubycli/) library.
+
+
+## Requirements
+
+    CLIv2 (32bit / 64bit)
+    C compiler
+
 
 ## Installation
 
@@ -16,13 +26,17 @@ Or install it yourself as:
 
     $ gem install teradata-cli
 
+
 ## Usage
 
-TODO: Write usage instructions here
+Look the examples folder
+
 
 ## Tests
 
+    $ export TEST_LOGON_STRING=dbc/user,password
     $ ruby -Ilib:test test/all
+
 
 ## Contributing
 
