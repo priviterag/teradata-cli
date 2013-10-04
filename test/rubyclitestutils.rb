@@ -7,12 +7,12 @@ module RubyCLITestUtils
 
   def playpen_string
     s = ENV['TEST_PLAYPEN_STRING']
-    s == '' ? nil : "#{s}"
+    s.nil? || s == '' ? nil : "#{s}"
   end
 
   def env_string
     s = ENV['TEST_ENV_STRING']
-    s == '' ? nil : "#{s}"
+    s.nil? || s == '' ? nil : "#{s}"
   end
 
   def get_table_name(name)
