@@ -48,7 +48,8 @@ module TeradataCli
 
     def initialize(logon_string, options = {})
       session_charset = options[:session_charset] || Connection.default_session_charset
-      internal_encoding = options[:internal_encoding] || default_internal_encoding()
+      # FIXME: internal_encoding = options[:internal_encoding] || default_internal_encoding()
+      internal_encoding = options[:internal_encoding]
       @logger = options[:logger] || NullLogger.new
       @logon_string = TeradataCli::LogonString.intern(logon_string)
       @session_charset = TeradataCli::SessionCharset.intern(session_charset)
@@ -566,7 +567,7 @@ module TeradataCli
         raise UserAbort.new(@error_code, @info, @message)
       else
         raise SQLError.new(@error_code, @info,
-            "SQL error [#{@error_code}]: #{@message}")
+                           "SQL error [#{@error_code}]: #{@message}")
       end
     end
 
@@ -784,9 +785,9 @@ module TeradataCli
 
     def read_indicator(f)
       f.read(num_indicator_bytes())\
-          .unpack(indicator_template()).first\
-          .split(//)[0, num_indicator_bits()]\
-          .map {|c| c == '1' }
+        .unpack(indicator_template()).first\
+        .split(//)[0, num_indicator_bits()]\
+        .map {|c| c == '1' }
     end
 
     def indicator_template
@@ -1050,7 +1051,7 @@ module TeradataCli
 
     def field(key)
       i = (@index[key.to_s.downcase] || @index[key]) or
-          raise ArgumentError, "bad field key: #{key}"
+      raise ArgumentError, "bad field key: #{key}"
       @fields[i]
     end
 
