@@ -1,5 +1,7 @@
 require 'mkmf'
 
+have_header('ruby.h') or raise 'could not find ruby.h'
+
 def extconf_main
   $objs = %w(cli.o)
   dir_config 'cli'
