@@ -996,7 +996,7 @@ module TeradataCli
         str
       else
         return '0.' + str if str.size == frac
-        str[-frac, 0] = '.'
+        str[-frac, 0] = '.' rescue nil
         str
       end
     end
