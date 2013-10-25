@@ -14,6 +14,8 @@ require 'teradata-cli/exception'
 require 'forwardable'
 require 'stringio'
 
+require 'ruby-debug' #FIXME
+
 module TeradataCli
 
   class ConnectionError < CLIError; end
@@ -871,20 +873,20 @@ module TeradataCli
 
     # default implementation: only read as string.
     def unmarshal(f)
-      f.read(@length)
+      f.read(@length).rstrip
     end
   end
 
   # CHAR: fixed-length character string
   # BYTE: fixed-length byte string
   class FixStringType < FieldType
-    bind_code :CHAR_NN, 452
+    # bind_code :CHAR_NN, 452
     bind_code :CHAR_N, 453
     bind_code :BYTE_NN, 692
     bind_code :BYTE_N, 693
 
     def unmarshal(f)
-      @extractor.extract(f.read(@length))
+      @extractor.extract(f.read(@length)).rstrip
     end
   end
 
@@ -996,7 +998,11 @@ module TeradataCli
         str
       else
         return '0.' + str if str.size == frac
-        str[-frac, 0] = '.' rescue nil
+        return '0.0' + str if str == "0"
+        begin
+          str[-frac, 0] = '.'
+        rescue
+        end
         str
       end
     end
@@ -1008,11 +1014,20 @@ module TeradataCli
 
     def unmarshal(f)
       d = (f.read(@length).unpack('l').first + 19000000).to_s
-      d[0,4] + '-' + d[4,2] + '-' + d[6,2]
+      Date.parse(d[0,4] + '-' + d[4,2] + '-' + d[6,2]) rescue nil
     end
   end
 
-  # TIME, TIMESTAMP are same as CHAR.
+  # TIME, TIMESTAMP
+  class DateTimeType < FieldType
+    bind_code :CHAR_NN, 452
+
+    def unmarshal(f)
+      # debugger #FIXME
+      dt = @extractor.extract(f.read(@length)) # "2013-10-10 16:44:39"
+      DateTime.parse("#{dt[0,10]}T#{dt[11,19]}") rescue nil
+    end
+  end
 
 
   class Record
