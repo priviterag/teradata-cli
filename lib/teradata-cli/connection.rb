@@ -1083,6 +1083,15 @@ module TeradataCli
       h
     end
 
+    def to_hash_with_sym
+      h = {}
+      @metadata.field_names.zip(@fields) do |name, field|
+        h[name.downcase.to_sym] = field.value
+      end
+      h
+    end
+
+
     def inspect
       "\#<Record #{@fields.map {|c| c.to_s }.join(', ')}>"
     end
