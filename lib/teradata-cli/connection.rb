@@ -14,8 +14,6 @@ require 'teradata-cli/exception'
 require 'forwardable'
 require 'stringio'
 
-require 'ruby-debug' #FIXME
-
 module TeradataCli
 
   class ConnectionError < CLIError; end
@@ -1023,7 +1021,6 @@ module TeradataCli
     bind_code :CHAR_NN, 452
 
     def unmarshal(f)
-      # debugger #FIXME
       dt = @extractor.extract(f.read(@length)) # "2013-10-10 16:44:39"
       DateTime.parse("#{dt[0,10]}T#{dt[11,19]}") rescue nil
     end
