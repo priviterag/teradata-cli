@@ -14,6 +14,8 @@ require 'teradata-cli/exception'
 require 'forwardable'
 require 'stringio'
 
+#require 'ruby-debug' #FIXME
+
 module TeradataCli
 
   class ConnectionError < CLIError; end
@@ -345,7 +347,7 @@ module TeradataCli
         end
       end
       warn { "read_metadata: each_fet_parcel returned before PclENDSTATEMENT?" }
-      nil   # FIXME: should raise?
+      nil   #FIXME: should raise?
     end
 
     def read_record
@@ -360,7 +362,7 @@ module TeradataCli
         end
       end
       warn { "read_record: each_fet_parcel returned before PclENDSTATEMENT?" }
-      nil   # FIXME: should raise?
+      nil   #FIXME: should raise?
     end
 
     def skip_current_statement
@@ -775,6 +777,7 @@ module TeradataCli
     def unmarshal(data)
       f = StringIO.new(data)
       cols = @types.zip(read_indicator(f)).map {|type, is_null|
+        # debugger #FIXME
         val = type.unmarshal(f)   # We must read value regardless of NULL.
         is_null ? nil : val
       }
@@ -878,13 +881,19 @@ module TeradataCli
   # CHAR: fixed-length character string
   # BYTE: fixed-length byte string
   class FixStringType < FieldType
-    # bind_code :CHAR_NN, 452
+    bind_code :CHAR_NN, 452
     bind_code :CHAR_N, 453
     bind_code :BYTE_NN, 692
     bind_code :BYTE_N, 693
 
     def unmarshal(f)
-      @extractor.extract(f.read(@length)).rstrip
+      val = @extractor.extract(f.read(@length)).rstrip
+      #FIXME why teradata cliv2 uses CHAR_NN for timestamps
+      if /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/ =~ val
+        DateTime.parse("#{val[0,10]}T#{val[11,19]}") rescue nil
+      else
+        val
+      end
     end
   end
 
@@ -1018,9 +1027,10 @@ module TeradataCli
 
   # TIME, TIMESTAMP
   class DateTimeType < FieldType
-    bind_code :CHAR_NN, 452
+    # bind_code :CHAR_NN, 452
 
     def unmarshal(f)
+      # debugger #FIXME
       dt = @extractor.extract(f.read(@length)) # "2013-10-10 16:44:39"
       DateTime.parse("#{dt[0,10]}T#{dt[11,19]}") rescue nil
     end
