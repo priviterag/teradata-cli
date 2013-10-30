@@ -121,6 +121,9 @@ cli_initialize(VALUE self, VALUE logon_string, VALUE session_charset)
   p->dbcarea.req_proc_opt = 'B';     // process request and return response,
   // with column names and EXPLAIN data.
 
+  // try to increase req_buf_len
+  p->dbcarea.req_buf_len = 65536; //2^16 or 64K
+
   p->dbcarea.charset_type = 'N';     // multibyte character set
   snprintf(p->session_charset, CHARSET_BUFSIZE,
       "%-30s", StringValueCStr(session_charset));
